@@ -16,6 +16,17 @@ import java.util.concurrent.ThreadPoolExecutor;
 @Configuration
 public class FebsConfigure {
 
+//    @Bean(name = "productPackageRepairExecutor")
+//    public ThreadPoolTaskExecutor productPackageRepairExecutor() {
+//        ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();
+//        threadPoolTaskExecutor.setCorePoolSize(10);
+//        threadPoolTaskExecutor.setMaxPoolSize(50);
+//        threadPoolTaskExecutor.setQueueCapacity(8000);
+//        threadPoolTaskExecutor.setKeepAliveSeconds(3000);
+//        threadPoolTaskExecutor.setThreadNamePrefix("productPackageRepairExecutor");
+//        return threadPoolTaskExecutor;
+//    }
+
     @Bean("febsAsyncThreadPool")
     public ThreadPoolTaskExecutor asyncThreadPoolTaskExecutor(){
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();

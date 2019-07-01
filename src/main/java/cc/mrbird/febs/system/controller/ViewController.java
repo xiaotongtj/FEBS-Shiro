@@ -50,7 +50,6 @@ public class ViewController extends BaseController {
     }
 
 
-
     @GetMapping("/")
     public String redirectIndex() {
         return "redirect:/index";
@@ -58,12 +57,13 @@ public class ViewController extends BaseController {
 
     @GetMapping("index")
     public String index(Model model) {
+        //获取授权信息
         AuthorizationInfo authorizationInfo = shiroHelper.getCurrentuserAuthorizationInfo();
         User user = super.getCurrentUser();
         user.setPassword("It's a secret");
         model.addAttribute("user", userService.findByName(user.getUsername())); // 获取实时的用户信息
         model.addAttribute("permissions", authorizationInfo.getStringPermissions());
-        model.addAttribute("roles",authorizationInfo.getRoles());
+        model.addAttribute("roles", authorizationInfo.getRoles());
         return "index";
     }
 
@@ -112,7 +112,7 @@ public class ViewController extends BaseController {
     }
 
     @GetMapping(FebsConstant.VIEW_PREFIX + "system/user/update/{username}")
-    @RequiresPermissions("user:update")
+    @RequiresPermissions("user:update") //在AuthorizationInfo定义了
     public String systemUserUpdate(@PathVariable String username, Model model) {
         resolveUserModel(username, model, false);
         return FebsUtil.view("system/user/userUpdate");

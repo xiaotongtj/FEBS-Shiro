@@ -49,6 +49,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public IPage<User> findUserDetail(User user, QueryRequest request) {
         Page<User> page = new Page<>(request.getPageNum(), request.getPageSize());
         SortUtil.handlePageSort(request, page, "userId", FebsConstant.ORDER_ASC, false);
+        //这里的分页本质是利用page来进行拦截分页的，mapper映射pageHelper的原理一样
+        /**
+         * 1.Page
+         * 2.QueryWrapper
+         */
         return this.baseMapper.findUserDetailPage(page, user);
     }
 

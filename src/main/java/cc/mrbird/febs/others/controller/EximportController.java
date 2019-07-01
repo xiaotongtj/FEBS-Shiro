@@ -81,7 +81,7 @@ public class EximportController extends BaseController {
             if (!StringUtils.endsWith(filename, ".xlsx")) {
                 throw new FebsException("只支持.xlsx类型文件导入");
             }
-            // 开始导入操作
+            // 开始导入操作（秒表）
             Stopwatch stopwatch = Stopwatch.createStarted();
             final List<Eximport> data = Lists.newArrayList();
             final List<Map<String, Object>> error = Lists.newArrayList();
@@ -95,7 +95,7 @@ public class EximportController extends BaseController {
 
                 @Override
                 public void onError(int sheet, int row, List<ExcelErrorField> errorFields) {
-                    // 数据校验失败时，记录到 error集合
+                    // 数据校验失败时，记录到 error集合(框架@ExcelField自动进行校验)
                     error.add(ImmutableMap.of("row", row, "errorFields", errorFields));
                 }
             });
@@ -108,6 +108,7 @@ public class EximportController extends BaseController {
                     "data", data,
                     "error", error
             );
+            //这种导入方式是同步的方式
             return new FebsResponse().success().data(result);
         } catch (Exception e) {
             String message = "导入Excel数据失败," + e.getMessage();

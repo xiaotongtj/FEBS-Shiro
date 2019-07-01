@@ -47,9 +47,11 @@ public class FebsStartedUpRunner implements ApplicationRunner {
             // 关闭 FEBS
             context.close();
         }
+        //IoC容器已经激活了，获取本地ip
         if (context.isActive()) {
             InetAddress address = InetAddress.getLocalHost();
             String url = String.format("http://%s:%s", address.getHostAddress(), port);
+            //loginUrl = /login
             String loginUrl = febsProperties.getShiro().getLoginUrl();
             if (StringUtils.isNotBlank(contextPath))
                 url += contextPath;

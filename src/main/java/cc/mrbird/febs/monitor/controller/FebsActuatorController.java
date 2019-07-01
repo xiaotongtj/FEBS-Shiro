@@ -40,6 +40,7 @@ public class FebsActuatorController {
     public FebsResponse httpTraces(String method, String url) throws FebsException {
         try {
             FebsHttpTraceDescriptor traces = httpTraceEndpoint.traces();
+            //httpTrace是actuate的一个端点检测，请求的详细信息
             List<HttpTrace> httpTraceList = traces.getTraces();
             List<FebsHttpTrace> febsHttpTraces = new ArrayList<>();
             httpTraceList.forEach(t -> {

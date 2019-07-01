@@ -51,6 +51,7 @@ public class RedisController {
         return new FebsResponse().success().data(result == null ? "" : result);
     }
 
+    //伪终端
     @Log("执行Redis set命令")
     @GetMapping("set")
     public FebsResponse set(String arg) throws RedisConnectException {

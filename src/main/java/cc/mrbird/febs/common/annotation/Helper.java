@@ -13,6 +13,7 @@ import java.lang.annotation.*;
 @Documented
 @Component
 public @interface Helper {
+    //别名传递
     @AliasFor(annotation = Component.class)
     String value() default "";
 }

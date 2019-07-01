@@ -13,6 +13,10 @@ import java.util.List;
 
 /**
  * @author MrBird
+ * <p>
+ * readOnly的意思就是当前的方法是只读的，也就是说当前的方法中没有需要处理事务（insert,update,delete）的操作。
+ * 则可以加上readOnly=true
+ * 使用它的好处是Spring会把你优化这方法，使用了readOnly=true，也就是使用了一个只读的connection。效率会高很多​
  */
 @Service
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
@@ -22,6 +26,7 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
     @Transactional
     public void deleteUserRolesByRoleId(List<String> roleIds) {
         this.baseMapper.delete(new QueryWrapper<UserRole>().lambda().in(UserRole::getRoleId, roleIds));
+        //this.baseMapper.delete(new LambdaQueryWrapper<UserRole>().in(UserRole::getRoleId, roleIds));
     }
 
     @Override

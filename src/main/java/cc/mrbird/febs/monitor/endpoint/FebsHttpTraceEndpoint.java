@@ -12,6 +12,7 @@ import java.util.List;
 @FebsEndPoint
 public class FebsHttpTraceEndpoint {
 
+    //1.这里是前提条件需要注册
     private final HttpTraceRepository repository;
 
     public FebsHttpTraceEndpoint(HttpTraceRepository repository) {

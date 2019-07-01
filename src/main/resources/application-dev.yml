@@ -11,18 +11,21 @@ spring:
         connection-test-query: select 1
         pool-name: FebsHikariCP
       # 配置默认数据源
-      primary: base
+      primary: base   #主数据源
       datasource:
         # 数据源-1，名称为 base
         base:
           username: root
-          password: 123456
-          driver-class-name: com.mysql.cj.jdbc.Driver
+          password: root
+          driver-class-name: com.mysql.cj.jdbc.Driver #这是mysql-connector-java6之后的驱动
           url: jdbc:mysql://127.0.0.1:3306/febs_base?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2b8
         # 数据源-2，名称为 quartz
+        # bnq_wms:   jdbc:mysql://106.15.44.184:3306/wms?characterEncoding=utf-8&useUnicode=true&allowMultiQueries=true
+        # wumart_wms:jdbc:mysql://192.168.202.92:3306?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+        # 【注意】这里可以不配置数据库名称，那么在sql_mapper中就需要指定数据库名称，写了就不需要指定数据库名称
         quartz:
           username: root
-          password: 123456
+          password: root
           driver-class-name: com.mysql.cj.jdbc.Driver
           url: jdbc:mysql://127.0.0.1:3306/febs_quartz?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2b8
 

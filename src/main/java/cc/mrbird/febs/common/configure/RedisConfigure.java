@@ -114,6 +114,7 @@ public class RedisConfigure extends CachingConfigurerSupport {
         return template;
     }
 
+    //cache自定义key生成器
     @Bean
     public KeyGenerator wiselyKeyGenerator() {
         return (target, method, params) -> {

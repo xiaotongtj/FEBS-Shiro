@@ -11,7 +11,7 @@ import org.springframework.context.annotation.PropertySource;
 @Data
 @SpringBootConfiguration
 @PropertySource(value = {"classpath:febs.properties"})
-@ConfigurationProperties(prefix = "febs")
+@ConfigurationProperties(prefix = "febs") //松散绑定（松散语法）
 public class FebsProperties {
 
     private ShiroProperties shiro = new ShiroProperties();

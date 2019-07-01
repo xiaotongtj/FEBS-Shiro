@@ -29,7 +29,9 @@ public class GeneratorHelper {
 
     public void generateEntityFile(List<Column> columns, GeneratorConfig configure) throws Exception {
         String suffix = GeneratorConstant.JAVA_FILE_SUFFIX;
+        //1.包名
         String path = getFilePath(configure, configure.getEntityPackage(), suffix, false);
+        //2.entity
         String templateName = GeneratorConstant.ENTITY_TEMPLATE;
         File entityFile = new File(path);
         JSONObject data = toJSONObject(configure);
@@ -37,6 +39,7 @@ public class GeneratorHelper {
         data.put("hasBigDecimal", false);
         columns.forEach(c -> {
             c.setField(FebsUtil.underscoreToCamel(StringUtils.lowerCase(c.getName())));
+            //任意的匹配，就返回true，否false
             if (StringUtils.containsAny(c.getType(), "date", "datetime", "timestamp")) {
                 data.put("hasDate", true);
             }
@@ -50,9 +53,12 @@ public class GeneratorHelper {
 
     public void generateMapperFile(List<Column> columns, GeneratorConfig configure) throws Exception {
         String suffix = GeneratorConstant.MAPPER_FILE_SUFFIX;
+        //1.生成的文件路径和名称
         String path = getFilePath(configure, configure.getMapperPackage(), suffix, false);
+        //2.模版名称
         String templateName = GeneratorConstant.MAPPER_TEMPLATE;
         File mapperFile = new File(path);
+        //3.模版名 + 数据 + 输出路径
         generateFileByTemplate(templateName, mapperFile, toJSONObject(configure));
     }
 
@@ -93,10 +99,14 @@ public class GeneratorHelper {
 
     @SuppressWarnings("UnstableApiUsage")
     private void generateFileByTemplate(String templateName, File file, Object data) throws Exception {
+        //1.获取freemarker的模版
         Template template = getTemplate(templateName);
+        //2.[重点]递归创建目录
         Files.createParentDirs(file);
+        //3.创建输出路径
         FileOutputStream fileOutputStream = new FileOutputStream(file);
         try (Writer out = new BufferedWriter(new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8), 10240)) {
+            //freemarker = template + data-->out到指定的目录上
             template.process(data, out);
         } catch (Exception e) {
             String message = "代码生成异常";
@@ -106,7 +116,9 @@ public class GeneratorHelper {
     }
 
     private static String getFilePath(GeneratorConfig configure, String packagePath, String suffix, boolean serviceInterface) {
+        //febs_gen_temp//src/main/java/
         String filePath = GeneratorConstant.TEMP_PATH + configure.getJavaPath() +
+                //package中的.变为/语义化
                 packageConvertPath(configure.getBasePackage() + "." + packagePath);
         if (serviceInterface) {
             filePath += "I";
@@ -125,11 +137,14 @@ public class GeneratorHelper {
 
     private Template getTemplate(String templateName) throws Exception {
         Configuration configuration = new freemarker.template.Configuration(Configuration.VERSION_2_3_23);
+        //模版路径
         String templatePath = GeneratorHelper.class.getResource("/generator/templates/").getPath();
         File file = new File(templatePath);
         if (!file.exists()) {
+            //临时文件
             templatePath = System.getProperties().getProperty("java.io.tmpdir");
             file = new File(templatePath + "/" + templateName);
+            //拷贝，资源拷贝
             FileUtils.copyInputStreamToFile(Objects.requireNonNull(AddressUtil.class.getClassLoader().getResourceAsStream("classpath:generator/templates/" + templateName)), file);
         }
         configuration.setDirectoryForTemplateLoading(new File(templatePath));

@@ -41,17 +41,17 @@ public class EximportServiceImpl extends ServiceImpl<EximportMapper, Eximport> i
     public void batchInsert(List<Eximport> list) {
         int total = list.size();
         int max = batchInsertMaxNum;
-        int count = total / max;
+        int count = total / max; //total 30 max 10
         int left = total % max;
         int length;
         if (left == 0) length = count;
         else length = count + 1;
-        for (int i = 0; i < length; i++) {
-            int start = max * i;
+        for (int i = 0; i < length; i++) { //length =3
+            int start = max * i; //start 0 end 10  10 - 20 20 -30
             int end = max * (i + 1);
             if (i != count) {
                 log.info("正在插入第" + (start + 1) + " ~ " + end + "条记录 ······");
-                saveBatch(list, end);
+                saveBatch(list, end);//batchSize 10 20 30,batchSize:区间
             } else {
                 end = total;
                 log.info("正在插入第" + (start + 1) + " ~ " + end + "条记录 ······");

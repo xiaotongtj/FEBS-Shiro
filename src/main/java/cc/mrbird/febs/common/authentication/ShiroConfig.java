@@ -68,6 +68,7 @@ public class ShiroConfig {
         return redisCacheManager;
     }
 
+    //核心，就是注册一个shiro过滤器
     @Bean
     public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager) {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
@@ -87,6 +88,7 @@ public class ShiroConfig {
         // 设置免认证 url
         String[] anonUrls = StringUtils.splitByWholeSeparatorPreserveAllTokens(febsProperties.getShiro().getAnonUrl(), ",");
         for (String url : anonUrls) {
+            //anno 不需要认证
             filterChainDefinitionMap.put(url, "anon");
         }
         // 配置退出过滤器，其中具体的退出代码 Shiro已经替我们实现了
@@ -103,13 +105,13 @@ public class ShiroConfig {
     public SecurityManager securityManager(ShiroRealm shiroRealm) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         // 配置 SecurityManager，并注入 shiroRealm
-        securityManager.setRealm(shiroRealm);
+        securityManager.setRealm(shiroRealm); //继承AuthorizingRealm
         // 配置 shiro session管理器
-        securityManager.setSessionManager(sessionManager());
+        securityManager.setSessionManager(sessionManager());//SessionListener,RedisManage
         // 配置 缓存管理类 cacheManager
-        securityManager.setCacheManager(cacheManager());
+        securityManager.setCacheManager(cacheManager());// redisCacheManage-->RedisManage
         // 配置 rememberMeCookie
-        securityManager.setRememberMeManager(rememberMeManager());
+        securityManager.setRememberMeManager(rememberMeManager()); //CookieRememberMeManager
         return securityManager;
     }
 
@@ -142,6 +144,7 @@ public class ShiroConfig {
         return cookieRememberMeManager;
     }
 
+    //这里是注解 @RequiresPermissions("menu:add")生效的原因，aop代理
     @Bean
     public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager) {
         AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();
@@ -175,11 +178,11 @@ public class ShiroConfig {
     public DefaultWebSessionManager sessionManager() {
         DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
         Collection<SessionListener> listeners = new ArrayList<>();
-        listeners.add(new ShiroSessionListener());
+        listeners.add(new ShiroSessionListener()); //ShiroSessionListener-->SessionListener
         // 设置 session超时时间
         sessionManager.setGlobalSessionTimeout(febsProperties.getShiro().getSessionTimeout() * 1000L);
         sessionManager.setSessionListeners(listeners);
-        sessionManager.setSessionDAO(redisSessionDAO());
+        sessionManager.setSessionDAO(redisSessionDAO()); //利用到了cacheManger
         sessionManager.setSessionIdUrlRewritingEnabled(false);
         return sessionManager;
     }

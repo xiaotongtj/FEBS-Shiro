@@ -43,7 +43,7 @@ public class ShiroRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principal) {
-        User user = (User) SecurityUtils.getSubject().getPrincipal();
+        User user = (User) SecurityUtils.getSubject().getPrincipal();//获取到用户信息(呼应的)
         String userName = user.getUsername();
 
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
@@ -56,7 +56,7 @@ public class ShiroRealm extends AuthorizingRealm {
         // 获取用户权限集
         List<Menu> permissionList = this.menuService.findUserPermissions(userName);
         Set<String> permissionSet = permissionList.stream().map(Menu::getPerms).collect(Collectors.toSet());
-        simpleAuthorizationInfo.setStringPermissions(permissionSet);
+        simpleAuthorizationInfo.setStringPermissions(permissionSet);//这里是注解@RequiresPermissions("user:view")判断依据
         return simpleAuthorizationInfo;
     }
 

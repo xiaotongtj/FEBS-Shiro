@@ -38,6 +38,9 @@ public class LoginController extends BaseController {
     @Autowired
     private ILoginLogService loginLogService;
 
+    /**
+     * username=mrbird&password=1234qwer&verifyCode=8346
+     */
     @PostMapping("login")
     @Limit(key = "login", period = 60, count = 20, name = "登录接口", prefix = "limit")
     public FebsResponse login(
@@ -45,6 +48,7 @@ public class LoginController extends BaseController {
             @NotBlank(message = "{required}") String password,
             @NotBlank(message = "{required}") String verifyCode,
             boolean rememberMe, HttpServletRequest request) throws FebsException {
+        //这里验证码是和sessionDTO进行比对的
         if (!CaptchaUtil.verify(verifyCode, request)) {
             throw new FebsException("验证码错误！");
         }

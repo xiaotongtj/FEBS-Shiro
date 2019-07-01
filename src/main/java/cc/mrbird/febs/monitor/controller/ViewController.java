@@ -58,6 +58,7 @@ public class ViewController {
         return FebsUtil.view("monitor/redisInfo");
     }
 
+    //redis终端
     @GetMapping("redis/terminal")
     @RequiresPermissions("redis:terminal:view")
     public String redisTerminal(Model model) {

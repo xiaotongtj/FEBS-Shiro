@@ -59,7 +59,9 @@ public class LimitAspect {
         String name = limitAnnotation.name();
         String key;
         String ip = IPUtil.getIpAddr(request);
+        //限流秒数
         int limitPeriod = limitAnnotation.period();
+        //限流次数
         int limitCount = limitAnnotation.count();
         switch (limitType) {
             case IP:
@@ -71,9 +73,11 @@ public class LimitAspect {
             default:
                 key = StringUtils.upperCase(method.getName());
         }
+        //不可变List
         ImmutableList<String> keys = ImmutableList.of(StringUtils.join(limitAnnotation.prefix() + "_", key, ip));
         String luaScript = buildLuaScript();
         RedisScript<Number> redisScript = new DefaultRedisScript<>(luaScript, Number.class);
+        //通过自增key来实现限流
         Number count = limitRedisTemplate.execute(redisScript, keys, limitCount, limitPeriod);
         log.info("IP:{} 第 {} 次访问key为 {}，描述为 [{}] 的接口", ip, count, keys, name);
         if (count != null && count.intValue() <= limitCount) {
@@ -86,6 +90,9 @@ public class LimitAspect {
     /**
      * 限流脚本
      * 调用的时候不超过阈值，则直接返回并执行计算器自加。
+     * 1.先判断key对应的value是否操作阀值
+     * 2.如果没有key进行自加，（刚开始的时候）这里设置的是key的有效期
+     * incr可以添加
      *
      * @return lua脚本
      */

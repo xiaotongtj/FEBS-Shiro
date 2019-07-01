@@ -70,10 +70,23 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements ILogS
         baseMapper.deleteBatchIds(list);
     }
 
+    /**
+     * @Asyn是Aop原理
+     *  proceedingJoinPoint 切点
+     *      Method
+     *      target
+     *      args
+     *
+     * @param point 切点
+     * @param log   日志
+     * @throws JsonProcessingException
+     */
     @Override
     public void saveLog(ProceedingJoinPoint point, Log log) throws JsonProcessingException {
+        //签名-->方法
         MethodSignature signature = (MethodSignature) point.getSignature();
         Method method = signature.getMethod();
+        //获取log注解，通过方法获取指定的注解
         cc.mrbird.febs.common.annotation.Log logAnnotation = method.getAnnotation(cc.mrbird.febs.common.annotation.Log.class);
         if (logAnnotation != null) {
             // 注解上的描述

@@ -39,10 +39,11 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements IJobS
 
 
     /**
-     * 项目启动时，初始化定时器
+     * 项目启动时，初始化定时器（这里是一开始和特殊情况下，下生效）
      */
     @PostConstruct
     public void init() {
+        //获取所有的任务Job
         List<Job> scheduleJobList = this.baseMapper.queryList();
         // 如果不存在，则创建
         scheduleJobList.forEach(scheduleJob -> {
@@ -95,7 +96,7 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements IJobS
     public void createJob(Job job) {
         job.setCreateTime(new Date());
         job.setStatus(Job.ScheduleStatus.PAUSE.getValue());
-        this.save(job);
+        this.save(job);//这里会映射id，mybatisPlus中才会这样
         ScheduleUtils.createScheduleJob(scheduler, job);
     }
 

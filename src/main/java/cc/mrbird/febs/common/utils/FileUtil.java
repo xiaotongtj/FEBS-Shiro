@@ -1,7 +1,6 @@
 package cc.mrbird.febs.common.utils;
 
 import cc.mrbird.febs.common.entity.FebsConstant;
-import cc.mrbird.febs.common.exception.FebsException;
 import com.google.common.base.Preconditions;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
@@ -36,6 +35,7 @@ public class FileUtil {
             throw new FileNotFoundException(fromPath + "不存在！");
         }
         try (
+                //CRC32是校验算法，CheckedOutputStream校验流 ZipOutputStream 压缩流输出流
                 FileOutputStream outputStream = new FileOutputStream(toFile);
                 CheckedOutputStream checkedOutputStream = new CheckedOutputStream(outputStream, new CRC32());
                 ZipOutputStream zipOutputStream = new ZipOutputStream(checkedOutputStream)
@@ -134,6 +134,7 @@ public class FileUtil {
         File[] files = dir.listFiles();
         if (files != null && ArrayUtils.isNotEmpty(files)) {
             for (File file : files) {
+                //如果是文件，这里的目录就进行了变化
                 compress(file, zipOut, baseDir + dir.getName() + "/");
             }
         }
@@ -144,6 +145,7 @@ public class FileUtil {
             return;
         }
         try (BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file))) {
+            //zipOutputStream 中需要含有zipEntity：代表需要压缩的文件，存储到zipOutputStream中
             ZipEntry entry = new ZipEntry(baseDir + file.getName());
             zipOut.putNextEntry(entry);
             int count;

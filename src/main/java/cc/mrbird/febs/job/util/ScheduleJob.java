@@ -24,8 +24,11 @@ public class ScheduleJob extends QuartzJobBean {
 
     private ExecutorService service = Executors.newSingleThreadExecutor();
 
+    //quartz和xxl-job的理念不一致之处，在于这里需要一个实体类进行存储类，方法，参数
+    //这里汇总了所有的trigger和job
     @Override
     protected void executeInternal(JobExecutionContext context) {
+        //获取jobDataMap(全局的变量),必须保证一个job-->trigger
         Job scheduleJob = (Job) context.getMergedJobDataMap().get(Job.JOB_PARAM_KEY);
 
         // 获取spring bean

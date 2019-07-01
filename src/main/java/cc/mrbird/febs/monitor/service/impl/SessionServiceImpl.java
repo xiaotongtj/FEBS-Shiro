@@ -31,12 +31,16 @@ public class SessionServiceImpl implements ISessionService {
     @Autowired
     private ObjectMapper mapper;
 
+    //这里获取的是在线人数，通过sessionDAO存储在redis中进行统计
     @Override
     public List<ActiveUser> list(String username) {
         String currentSessionId = (String) SecurityUtils.getSubject().getSession().getId();
 
         List<ActiveUser> list = new ArrayList<>();
+        //获取redis中存储了的session
         Collection<Session> sessions = sessionDAO.getActiveSessions();
+        //shiro中会将redis中的session保存到一个key为DefaultSubjectContext.PRINCIPALS_SESSION_KEY中，
+        //然后进行封装成一个SimplePrincipalCollection对象，然后可以强制转为User
         for (Session session : sessions) {
             ActiveUser activeUser = new ActiveUser();
             User user;
@@ -70,6 +74,7 @@ public class SessionServiceImpl implements ISessionService {
         return list;
     }
 
+    //shiro退出的操作，sessionDAo，设置session的过期时间，session停用，不让会有缓存存在。
     @Override
     public void forceLogout(String sessionId) {
         Session session = sessionDAO.readSession(sessionId);
