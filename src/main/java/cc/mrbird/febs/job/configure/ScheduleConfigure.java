@@ -54,6 +54,8 @@ public class ScheduleConfigure {
         factory.setOverwriteExistingJobs(true);
         // 设置自动启动，默认为 true
         factory.setAutoStartup(true);
+        //这里可以设置，创建Job的时候，将Job添加到IoC容器中
+        //factory.setJobFactory();
 
         return factory;
     }

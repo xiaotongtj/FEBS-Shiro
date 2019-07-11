@@ -40,6 +40,9 @@ public class LoginController extends BaseController {
 
     /**
      * username=mrbird&password=1234qwer&verifyCode=8346
+     *
+     * 前端加密：
+     * 前端不加密：
      */
     @PostMapping("login")
     @Limit(key = "login", period = 60, count = 20, name = "登录接口", prefix = "limit")
@@ -52,6 +55,7 @@ public class LoginController extends BaseController {
         if (!CaptchaUtil.verify(verifyCode, request)) {
             throw new FebsException("验证码错误！");
         }
+        //1.将前端传递的密码进行MD5加密
         password = MD5Util.encrypt(username.toLowerCase(), password);
         UsernamePasswordToken token = new UsernamePasswordToken(username, password, rememberMe);
         try {

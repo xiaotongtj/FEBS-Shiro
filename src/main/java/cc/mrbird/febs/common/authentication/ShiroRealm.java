@@ -78,6 +78,7 @@ public class ShiroRealm extends AuthorizingRealm {
 
         if (user == null)
             throw new UnknownAccountException("用户名或密码错误！");
+        //前端加密密码 | 数据库密码
         if (!StringUtils.equals(password, user.getPassword()))
             throw new IncorrectCredentialsException("用户名或密码错误！");
         if (User.STATUS_LOCK.equals(user.getStatus()))

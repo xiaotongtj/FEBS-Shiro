@@ -31,7 +31,7 @@ public class ScheduleJob extends QuartzJobBean {
         //获取jobDataMap(全局的变量),必须保证一个job-->trigger
         Job scheduleJob = (Job) context.getMergedJobDataMap().get(Job.JOB_PARAM_KEY);
 
-        // 获取spring bean
+        // 获取spring bean（这里不能autoWired的，不再Ioc容器中）
         IJobLogService scheduleJobLogService = SpringContextUtil.getBean(IJobLogService.class);
 
         JobLog jobLog = new JobLog();

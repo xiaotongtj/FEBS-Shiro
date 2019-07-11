@@ -70,6 +70,10 @@ public class ScheduleUtils {
             if (scheduleJob.getStatus().equals(Job.ScheduleStatus.PAUSE.getValue())) {
                 pauseJob(scheduler, scheduleJob.getJobId());
             }
+            // 启动
+            if (!scheduler.isShutdown()) {
+                scheduler.start();
+            }
         } catch (SchedulerException e) {
             log.error("创建定时任务失败", e);
         }
